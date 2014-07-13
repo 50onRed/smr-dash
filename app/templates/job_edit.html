@@ -17,7 +17,7 @@
     var editor = ace.edit("body");
     var editor_submit = document.getElementById("body_ace");
     editor.session.setUseWorker(false);
-    editor.setTheme("ace/theme/monokai");
+    editor.setTheme("ace/theme/github");
     editor.getSession().setMode("ace/mode/python");
     document.forms[0].onsubmit= function() {
         editor_submit.value = editor.getSession().getValue();
