@@ -42,6 +42,8 @@ def user():
         flash('Your profile has been updated.')
         return redirect(url_for('.user', id=current_user.id))
     form.name.data = current_user.name
+    form.aws_access_key.data = current_user.aws_access_key
+    form.aws_secret_key.data = current_user.aws_secret_key
     return render_template('user_edit.html', form=form)
 
 

@@ -1,5 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 from flask.ext.wtf import Form
+from flask.ext.login import current_user
+import boto
 from cgi import escape
 from wtforms import StringField, BooleanField, SelectField, SubmitField, TextField
 from wtforms.compat import text_type
@@ -13,6 +15,23 @@ class EditProfileForm(Form):
     aws_access_key = StringField('AWS Access Key', validators=[Optional(), Length(20, 20)])
     aws_secret_key = StringField('AWS Secret Key', validators=[Optional(), Length(40, 40)])
     submit = SubmitField('Submit')
+
+    def validate(self):
+        if not super(EditProfileForm, self).validate():
+            return False
+
+        print("test")
+        if self.aws_access_key.data != current_user.aws_access_key or \
+                self.aws_secret_key.data != current_user.aws_secret_key:
+            print("test2")
+            if self.aws_access_key.data and self.aws_secret_key.data:
+                try:
+                    boto.connect_s3(self.aws_access_key.data, self.aws_secret_key.data).get_canonical_user_id()
+                except Exception as e:
+                    self.aws_access_key.errors.append('Could not connect to S3 using specified credentials')
+                    return False
+
+        return True
 
 
 class EditProfileAdminForm(Form):
@@ -35,6 +54,21 @@ class EditProfileAdminForm(Form):
         if field.data != self.user.email and \
                 User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
+
+    def validate(self):
+        if not super(EditProfileAdminForm, self).validate():
+            return False
+
+        if self.aws_access_key.data != self.user.aws_access_key or \
+                self.aws_secret_key.data != self.user.aws_secret_key:
+            if self.aws_access_key.data and self.aws_secret_key.data:
+                try:
+                    boto.connect_s3(self.aws_access_key.data, self.aws_secret_key.data).get_canonical_user_id()
+                except Exception as e:
+                    self.aws_access_key.errors.append("Could not connect to S3 using specified credentials")
+                    return False
+
+        return True
 
 class AceEditorWidget(TextArea):
     """ Renders an ACE code editor. """
