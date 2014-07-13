@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}SMR - {{ form.name.value|default("Create Job") }}{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Edit Job</h1>
+</div>
+<div>
+    {% if current_user.can(Permission.CREATE_JOBS) %}
+    {{ wtf.quick_form(form) }}
+    {% endif %}
+</div>
+<script src="/static/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("body");
+    var editor_submit = document.getElementById("body_ace");
+    editor.session.setUseWorker(false);
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/python");
+    document.forms[0].onsubmit= function() {
+        editor_submit.value = editor.getSession().getValue();
+        return true;
+    };
+</script>
+{% endblock %}

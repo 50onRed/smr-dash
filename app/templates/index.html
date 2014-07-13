@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}SMR{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello {{ current_user.email }}!</h1>
+    <p>
+        {% if current_user.can(Permission.CREATE_JOBS) %}<a class="btn btn-default" href="{{ url_for('.job_create') }}">Create a new Job</a>{% endif %}
+    </p>
+</div>
+<div>
+</div>
+<div class="job-tabs">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{{ url_for('.index') }}">All</a></li>
+    </ul>
+    {% include '_jobs.html' %}
+</div>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.index') }}
+</div>
+{% endif %}
+{% endblock %}

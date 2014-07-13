@@ -1,0 +1,20 @@
+<ul class="jobs">
+    {% for job in jobs %}
+    <li class="job">
+        <div class="job-content">
+            <div class="job-date">{{ moment(job.timestamp).fromNow() }}</div>
+            <div class="job-name">
+                {% if current_user == job.author or current_user.is_administrator() %}
+                <a href="{{ url_for('.edit', id=job.id) }}">
+                    {{ job.name }}
+                </a>
+                {% else %}
+                    {{ job.name }}
+                {% endif %}
+            </div>
+            <div class="job-footer">
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>

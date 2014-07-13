@@ -1,0 +1,58 @@
+.profile-thumbnail {
+    position: absolute;
+}
+.profile-header {
+    min-height: 260px;
+    margin-left: 280px;
+}
+div.job-tabs {
+    margin-top: 16px;
+}
+ul.jobs {
+    list-style-type: none;
+    padding: 0px;
+    margin: 16px 0px 0px 0px;
+    border-top: 1px solid #e0e0e0;
+}
+div.job-tabs ul.jobs {
+    margin: 0px;
+    border-top: none;
+}
+ul.jobs li.job {
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+ul.jobs li.job:hover {
+    background-color: #f0f0f0;
+}
+div.job-date {
+    float: right;
+}
+div.job-author {
+    font-weight: bold;
+}
+div.job-thumbnail {
+    position: absolute;
+}
+div.job-content {
+    margin-left: 48px;
+    min-height: 48px;
+}
+div.job-footer {
+    text-align: right;
+}
+div.pagination {
+    width: 100%;
+    text-align: right;
+    padding: 0px;
+    margin: 0px;
+}
+.job-name h1 {
+    font-size: 140%;
+}
+.job-name h2 {
+    font-size: 130%;
+}
+.job-name h3 {
+    font-size: 120%;
+}
