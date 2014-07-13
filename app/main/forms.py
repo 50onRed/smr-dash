@@ -51,8 +51,7 @@ class AceEditorField(TextField):
     widget = AceEditorWidget()
 
 DEFAULT_JOB = """#!/usr/bin/env python
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 INPUT_DATA = "s3://bucket/"
 
@@ -69,10 +68,15 @@ def MAP_FUNC(file_name):
 def REDUCE_FUNC(line):
     \"""
     takes each line that MAP_FUNC outputs to STDOUT
+    all STDOUT output of this function will be in the final job output
     \"""
     pass
 
 def OUTPUT_RESULTS_FUNC():
+    \"""
+    runs when the job is done
+    all STDOUT output of this function will be in the final job output
+    \"""
     pass
 """
 
