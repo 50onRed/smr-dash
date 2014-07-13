@@ -3,15 +3,15 @@ from flask.ext.wtf import Form
 from cgi import escape
 from wtforms import StringField, BooleanField, SelectField, SubmitField, TextField
 from wtforms.compat import text_type
-from wtforms.validators import Required, Length, Email
+from wtforms.validators import Required, Length, Email, Optional
 from wtforms.widgets import TextArea, HTMLString
 from wtforms import ValidationError
 from ..models import Role, User
 
 class EditProfileForm(Form):
     name = StringField('Real Name', validators=[Length(0, 64)])
-    aws_access_key = StringField('AWS Access Key', validators=[Length(20, 20)])
-    aws_secret_key = StringField('AWS Secret Key', validators=[Length(40, 40)])
+    aws_access_key = StringField('AWS Access Key', validators=[Optional(), Length(20, 20)])
+    aws_secret_key = StringField('AWS Secret Key', validators=[Optional(), Length(40, 40)])
     submit = SubmitField('Submit')
 
 
@@ -21,8 +21,8 @@ class EditProfileAdminForm(Form):
     confirmed = BooleanField('Confirmed')
     role = SelectField('Role', coerce=int)
     name = StringField('Real Name', validators=[Length(0, 64)])
-    aws_access_key = StringField('AWS Access Key', validators=[Length(20, 20)])
-    aws_secret_key = StringField('AWS Secret Key', validators=[Length(40, 40)])
+    aws_access_key = StringField('AWS Access Key', validators=[Optional(), Length(20, 20)])
+    aws_secret_key = StringField('AWS Secret Key', validators=[Optional(), Length(40, 40)])
     submit = SubmitField('Submit')
 
     def __init__(self, user, *args, **kwargs):
