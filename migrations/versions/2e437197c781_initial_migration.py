@@ -34,6 +34,8 @@ def upgrade():
         sa.Column('member_since', sa.DateTime(), nullable=True),
         sa.Column('last_seen', sa.DateTime(), nullable=True),
         sa.Column('avatar_hash', sa.String(length=32), nullable=True),
+        sa.Column('aws_access_key', sa.String(length=20), nullable=True),
+        sa.Column('aws_secret_key', sa.String(length=40), nullable=True),
         sa.ForeignKeyConstraint(['role_id'], ['roles.id'], ),
         sa.PrimaryKeyConstraint('id')
     )

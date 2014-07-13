@@ -36,6 +36,8 @@ def user():
     form = EditProfileForm()
     if form.validate_on_submit():
         current_user.name = form.name.data
+        current_user.aws_access_key = form.aws_access_key.data
+        current_user.aws_secret_key = form.aws_secret_key.data
         db.session.add(current_user)
         flash('Your profile has been updated.')
         return redirect(url_for('.user', id=current_user.id))
@@ -54,6 +56,8 @@ def edit_user(id):
         user.confirmed = form.confirmed.data
         user.role = Role.query.get(form.role.data)
         user.name = form.name.data
+        user.aws_access_key = form.aws_access_key.data
+        user.aws_secret_key = form.aws_secret_key.data
         db.session.add(user)
         flash('The profile has been updated.')
         return redirect(url_for('.user', id=user.id))

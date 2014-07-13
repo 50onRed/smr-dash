@@ -12,6 +12,7 @@ from . import db, login_manager
 class Permission(object):
     ADMINISTER = 0x01
     CREATE_JOBS = 0x02
+    RUN_JOBS = 0x04
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -24,7 +25,7 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {
-            'User': (Permission.CREATE_JOBS, True),
+            'User': (Permission.CREATE_JOBS | Permission.RUN_JOBS, True),
             'Administrator': (0xff, False)
         }
         for r in roles:
@@ -51,6 +52,8 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
+    aws_access_key = db.Column(db.String(20))
+    aws_secret_key = db.Column(db.String(40))
     jobs = db.relationship('Job', backref='author', lazy='dynamic')
 
     @staticmethod
