@@ -15,4 +15,5 @@ Werkzeug==0.9.6
 alembic==0.6.6
 itsdangerous==0.24
 six==1.7.3
+redis==2.10.3
 smr==0.0.2

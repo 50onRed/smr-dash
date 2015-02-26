@@ -34,7 +34,7 @@ def create_app(config_name):
 
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
         from flask.ext.sslify import SSLify
-        sslify = SSLify(app)
+        SSLify(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)

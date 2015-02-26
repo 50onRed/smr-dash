@@ -2,8 +2,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from flask import render_template, redirect, url_for, abort, flash, request, current_app
 from flask.ext.login import login_required, current_user
 from flask.ext.sqlalchemy import get_debug_queries
+from flask.ext.rq import get_queue
 from . import main
-from .forms import EditProfileForm, EditProfileAdminForm, JobForm
+from .forms import EditProfileForm, EditProfileAdminForm, JobEditForm, JobRunForm
+from .jobs import run_job
 from .. import db
 from ..models import Permission, Role, User, Job
 from ..decorators import admin_required
@@ -73,7 +75,7 @@ def edit_user(id):
 @main.route('/job/create', methods=['GET', 'POST'])
 @login_required
 def job_create():
-    form = JobForm()
+    form = JobEditForm()
     if current_user.can(Permission.CREATE_JOBS) and \
             form.validate_on_submit():
         job = Job(name=form.name.data,
@@ -88,17 +90,29 @@ def job_create():
 @login_required
 def edit(id):
     job = Job.query.get_or_404(id)
-    if current_user != job.author and \
-            not current_user.can(Permission.ADMINISTER):
-        # not 403 because we don't want to tell user that job exists
-        abort(404) # not 403 because we don't want to tell 
-    form = JobForm()
+    if current_user != job.author and not current_user.can(Permission.ADMINISTER):
+        abort(404) # not 403 because we don't want to tell user that job exists
+    form = JobEditForm()
     if form.validate_on_submit():
         job.name = form.name.data
         job.body = form.body.data
         db.session.add(job)
         flash('The job has been updated.')
-        return redirect(url_for('.job', id=job.id))
+        return redirect(url_for('.index', id=job.id))
     form.name.data = job.name
     form.body.data = job.body
     return render_template('job_edit.html', form=form)
+
+
+@main.route('/job/<int:id>/run', methods=['GET', 'POST'])
+@login_required
+def run(id):
+    job = Job.query.get_or_404(id)
+    if current_user != job.author and not current_user.can(Permission.ADMINISTER):
+        abort(404) # not 403 because we don't want to tell user that job exists
+    form = JobRunForm()
+    if form.validate_on_submit():
+        get_queue("jobs").enqueue(run_job, job.id, form.date_range.data, form.start_date.data, form.end_date.data)
+        flash('The job has been scheduled to run.')
+        return redirect(url_for('.index', id=job.id))
+    return render_template('job_run.html', form=form, job=job)
