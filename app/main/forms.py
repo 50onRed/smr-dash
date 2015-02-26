@@ -3,9 +3,9 @@ from flask.ext.wtf import Form
 from flask.ext.login import current_user
 import boto
 from cgi import escape
-from wtforms import StringField, BooleanField, SelectField, SubmitField, TextField
+from wtforms import StringField, BooleanField, SelectField, SubmitField, TextField, IntegerField, DateField
 from wtforms.compat import text_type
-from wtforms.validators import Required, Length, Email, Optional
+from wtforms.validators import Required, Length, Email, Optional, NumberRange
 from wtforms.widgets import TextArea, HTMLString
 from wtforms import ValidationError
 from ..models import Role, User
@@ -118,7 +118,17 @@ def OUTPUT_RESULTS_FUNC():
     pass
 """
 
-class JobForm(Form):
+class JobEditForm(Form):
     name = StringField("Job Name", validators=[Required(), Length(1, 64)])
     body = AceEditorField("Job Definition", validators=[Required()], default=DEFAULT_JOB)
     submit = SubmitField("Submit")
+
+
+class JobRunForm(Form):
+    start_date = DateField("Start Date", validators=[Optional()])
+    end_date = DateField("End Date", validators=[Optional()])
+    date_range = IntegerField("Date Range", validators=[Optional(), NumberRange(0)])
+    submit = SubmitField("Run")
+
+class JobRunEC2Form(JobRunForm):
+    pass

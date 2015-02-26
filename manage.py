@@ -16,8 +16,10 @@ if os.path.exists('.env'):
 
 from app import create_app, db
 from app.models import User, Role, Permission, Job
+from app.main.jobs import job_runner
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
+import subprocess
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'development')
 manager = Manager(app)
@@ -74,6 +76,10 @@ def deploy():
     # create user roles
     Role.insert_roles()
 
+@manager.command
+def process_jobs():
+    """ run SMR jobs in the background with rq """
+    job_runner()
 
 if __name__ == '__main__':
     manager.run()

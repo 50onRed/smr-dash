@@ -16,8 +16,11 @@ class Config(object):
     SMR_MAIL_SENDER = 'SMR Admin <smr@localhost>'
     SMR_ADMIN = os.environ.get('SMR_ADMIN')
     SMR_JOBS_PER_PAGE = 20
-    SMR_SLOW_DB_QUERY_TIME=0.5
-    DEBUG_TB_INTERCEPT_REDIRECTS=False
+    SMR_SLOW_DB_QUERY_TIME = 0.5
+    SMR_JOB_DEFINITION_DIRECTORY = os.environ.get("SMR_JOB_DEFINITION_DIRECTORY")
+    SMR_JOB_OUTPUT_DIRECTORY = os.environ.get("SMR_JOB_OUTPUT_DIRECTORY")
+    REDIS_URI = os.environ.get("REDIS_URI") or "redis://localhost:6379/0"
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     @staticmethod
     def init_app(app):
@@ -26,8 +29,7 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
 
 class TestingConfig(Config):
